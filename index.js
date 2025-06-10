@@ -83,7 +83,7 @@ async function runAllTests() {
                 console.log(`-> Testing ${url} from ${location}`);
                 // Using the Lighthouse endpoint and passing the location
                 const response = await axios.post(
-                  `https://speedvitals.com/v1/lighthouse-tests`,
+                  `https://api.speedvitals.com/v1/lighthouse-tests`,
                   {
                     url,
                     location
