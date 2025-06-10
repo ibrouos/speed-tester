@@ -83,8 +83,8 @@ async function runAllTests() {
       const apiParams = {
         urls: [...URLS_TO_TEST],
         locations: LOCATIONS_TO_TEST,
-            'devices': ['mobile', 'desktop'],
-            batch_type: 'multiple-urls'
+        devices: ['mobile', 'desktop'],
+        batch_type: 'multiple-urls'
       };
 
       console.log(apiParams);
@@ -101,10 +101,10 @@ async function runAllTests() {
       if (data.status === 'success') {
           results.push({...data});
       } else {
-          console.error(`   - Failed for ${url} from ${location}: ${data.message || 'Unknown API error'}`);
+          console.error(`   - Failed for ${ URLS_TO_TEST.join(' ') } from ${location}: ${data.message || 'Unknown API error'}`);
       }
     } catch (error) {
-        console.error(`   - Error testing ${url} from ${location}:`, error.message);
+        console.error(`   - Error testing ${ URLS_TO_TEST.join(' ') } from ${location}:`, error.message);
     }
 
     return results;
