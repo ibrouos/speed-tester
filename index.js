@@ -81,11 +81,13 @@ async function runAllTests() {
 
     try {
       const apiParams = {
-        urls: URLS_TO_TEST,
+        urls: [...URLS_TO_TEST],
         locations: LOCATIONS_TO_TEST,
             'devices': ['mobile', 'desktop'],
             batch_type: 'multiple-urls'
       };
+
+      console.log(apiParams);
 
       const response = await axios.post(`https://api.speedvitals.com/v1/lighthouse-batch-tests`, apiParams, {
         headers: {
