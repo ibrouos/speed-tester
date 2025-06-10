@@ -82,22 +82,21 @@ async function runAllTests() {
             try {
                 console.log(`-> Testing ${url} from ${location}`);
                 // Using the Lighthouse endpoint and passing the location
-                const response = await axios.get(`https://speedvitals.com/api/test?url=${url}&location=${location}&key=${API_KEY}`);
+                const response = await axios.post(
+                  `https://speedvitals.com/v1/lighthouse-tests`,
+                  {
+                    url,
+                    location
+                  },
+                  {
+                    'X-API-KEY': API_KEY
+                  }
+                );
                 const data = response.data;
 
                 if (data.status === 'success') {
                     console.log(`   - Success! Score: ${data.data.performance_score}`);
-                    results.push({
-                        url: url,
-                        location: location,
-                        timestamp: new Date().toISOString(),
-                        performance: data.data.performance_score,
-                        fcp: data.data.first_contentful_paint,
-                        lcp: data.data.largest_contentful_paint,
-                        cls: data.data.cumulative_layout_shift,
-                        tti: data.data.time_to_interactive,
-                        speedIndex: data.data.speed_index,
-                    });
+                    results.push({...data});
                 } else {
                     console.error(`   - Failed for ${url} from ${location}: ${data.message || 'Unknown API error'}`);
                 }
