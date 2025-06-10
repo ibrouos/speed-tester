@@ -77,34 +77,34 @@ async function runAllTests() {
     console.log(`Testing ${URLS_TO_TEST.length} URL(s) across ${LOCATIONS_TO_TEST.length} location(s)...`);
     const results = [];
     // Using a for...of loop to run tests sequentially to avoid overwhelming the API.
-    for (const url of URLS_TO_TEST) {
-        for (const location of LOCATIONS_TO_TEST) {
-            try {
-                console.log(`-> Testing ${url} from ${location}`);
-                // Using the Lighthouse endpoint and passing the location
-                const response = await axios.post(
-                  `https://api.speedvitals.com/v1/lighthouse-tests`,
-                  {
-                    url,
-                    location
-                  },
-                  {
-                    'X-API-KEY': API_KEY
-                  }
-                );
-                const data = response.data;
 
-                if (data.status === 'success') {
-                    console.log(`   - Success! Score: ${data.data.performance_score}`);
-                    results.push({...data});
-                } else {
-                    console.error(`   - Failed for ${url} from ${location}: ${data.message || 'Unknown API error'}`);
-                }
-            } catch (error) {
-                console.error(`   - Error testing ${url} from ${location}:`, error.message);
-            }
+
+    try {
+      const apiParams = {
+        urls: URLS_TO_TEST,
+        locations: LOCATIONS_TO_TEST,
+            'devices': ['mobile', 'desktop'],
+            batch_type: 'multiple-urls'
+      };
+
+      const response = await axios.post(`https://api.speedvitals.com/v1/lighthouse-batch-tests`, apiParams, {
+        headers: {
+          'X-API-KEY': API_KEY,
+          'Content-Type': 'application/json',
         }
+      });
+
+      const data = response?.data;
+
+      if (data.status === 'success') {
+          results.push({...data});
+      } else {
+          console.error(`   - Failed for ${url} from ${location}: ${data.message || 'Unknown API error'}`);
+      }
+    } catch (error) {
+        console.error(`   - Error testing ${url} from ${location}:`, error.message);
     }
+
     return results;
 }
 
