@@ -101,10 +101,10 @@ async function runAllTests() {
       if (data.status === 'success') {
           results.push({...data});
       } else {
-          console.error(`   - Failed for ${ URLS_TO_TEST.join(' ') } from ${location}: ${data.message || 'Unknown API error'}`);
+          console.error(`   - Failed for ${ URLS_TO_TEST.join(' ') } from ${ LOCATIONS_TO_TEST.join(' ')}: ${data.message || 'Unknown API error'}`);
       }
     } catch (error) {
-        console.error(`   - Error testing ${ URLS_TO_TEST.join(' ') } from ${location}:`, error.message);
+        console.error(`   - Error testing ${ URLS_TO_TEST.join(' ') } from ${ LOCATIONS_TO_TEST.join(' ')}:`, error.message);
     }
 
     return results;
