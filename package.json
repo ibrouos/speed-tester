@@ -1,0 +1,21 @@
+{
+  "name": "performance-reporter",
+  "version": "1.0.0",
+  "description": "Tests website performance with SpeedVitals API and generates a static report.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test-and-build": "node index.js"
+  },
+  "keywords": [
+    "performance",
+    "speedvitals",
+    "github-actions",
+    "web-vitals"
+  ],
+  "author": "Gemini",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}
