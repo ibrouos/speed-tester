@@ -87,7 +87,7 @@ async function runAllTests() {
         batch_type: 'multiple-urls'
       };
 
-      console.log(apiParams);
+      console.log(apiParams, API_KEY);
 
       const response = await axios.post(`https://api.speedvitals.com/v1/lighthouse-batch-tests`, apiParams, {
         headers: {
