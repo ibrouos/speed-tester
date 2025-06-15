@@ -18,32 +18,34 @@ async function main() {
 
   const apiParams = {
     urls: [...URLS_TO_TEST][0],
-    locations: LOCATIONS_TO_TEST,
     device: 'desktop'
   };
 
   console.log('Request parameters:', JSON.stringify(apiParams, null, 2));
 
-  try {
-    const response = await axios.post(
-      'https://api.speedvitals.com/v1/lighthouse-tests',
-      apiParams,
-      {
-        headers: {
-          'X-API-KEY': API_KEY,
-          'Content-Type': 'application/json'
+  LOCATIONS_TO_TEST.forEach(location => {
+    const params = {...apiParams, ...{location: location}};
+    try {
+      const response = await axios.post(
+        'https://api.speedvitals.com/v1/lighthouse-tests',
+        params,
+        {
+          headers: {
+            'X-API-KEY': API_KEY,
+            'Content-Type': 'application/json'
+          }
         }
+      );
+      console.log('Triggered tests:', response.data);
+    } catch (err) {
+      console.error('Failed to trigger tests:', err.message);
+      if (err.response) {
+        console.error('Status:', err.response.status);
+        console.error('Response:', JSON.stringify(err.response.data));
       }
-    );
-    console.log('Triggered tests:', response.data);
-  } catch (err) {
-    console.error('Failed to trigger tests:', err.message);
-    if (err.response) {
-      console.error('Status:', err.response.status);
-      console.error('Response:', JSON.stringify(err.response.data));
+      process.exit(1);
     }
-    process.exit(1);
-  }
+  });
 }
 
 main();
