@@ -23,8 +23,9 @@ async function main() {
 
   console.log('Request parameters:', JSON.stringify(apiParams, null, 2));
 
-  LOCATIONS_TO_TEST.forEach(location => {
-    const params = {...apiParams, ...{location: location}};
+  for (const location of LOCATIONS_TO_TEST) {
+    const params = { ...apiParams, location };
+  
     try {
       const response = await axios.post(
         'https://api.speedvitals.com/v1/lighthouse-tests',
@@ -36,16 +37,12 @@ async function main() {
           }
         }
       );
-      console.log('Triggered tests:', response.data);
+      console.log(`Success for ${location}:`, response.data);
     } catch (err) {
-      console.error('Failed to trigger tests:', err.message);
-      if (err.response) {
-        console.error('Status:', err.response.status);
-        console.error('Response:', JSON.stringify(err.response.data));
-      }
-      process.exit(1);
+      console.error(`Error for ${location}:`, err);
     }
-  });
+  }
+
 }
 
 main();
