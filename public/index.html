@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Performance Report</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    @import url('https://rsms.me/inter/inter.css');
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <div class="container mx-auto p-4 md:p-8">
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold text-gray-900">Performance Report</h1>
+      <p class="text-gray-600 mt-2">Generated on: Sun, 15 Jun 2025 23:26:06 GMT</p>
+    </header>
+
+    <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+      <h2 class="text-2xl font-semibold mb-4">Performance Score Over Time</h2>
+      <div class="h-96">
+        <canvas id="performanceChart"></canvas>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold mb-4">Detailed History</h2>
+      
+    </section>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    const performanceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+  "datasets": []
+},
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: false,
+            suggestedMin: 70,
+            suggestedMax: 100,
+            title: {
+              display: true,
+              text: 'Performance Score'
+            }
+          },
+          x: {
+            type: 'time',
+            time: {
+              unit: 'day',
+              tooltipFormat: 'MMM dd, yyyy'
+            },
+            title: {
+              display: true,
+              text: 'Date of Test'
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            mode: 'index',
+            intersect: false
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+  
