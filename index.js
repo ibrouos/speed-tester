@@ -19,6 +19,7 @@ const OUTPUT_HTML_FILE = path.join(PUBLIC_DIR, 'index.html');
  */
 async function main() {
   console.log('Fetching test results from SpeedVitals...');
+  console.log('API endpoint: https://api.speedvitals.com/v1/lighthouse-tests');
 
   if (!API_KEY) {
     console.error('FATAL: SPEEDVITALS_API_KEY environment variable not set.');
@@ -30,6 +31,7 @@ async function main() {
   await fs.mkdir(PUBLIC_DIR, { recursive: true });
 
   const allResults = await fetchAllResults();
+  console.log(`Fetched ${allResults.length} result entries`);
   await fs.writeFile(RESULTS_FILE, JSON.stringify(allResults, null, 2));
 
   await buildStaticPage(allResults);
@@ -54,6 +56,10 @@ async function fetchAllResults() {
     return data.results || [];
   } catch (err) {
     console.error('Error fetching results:', err.message);
+    if (err.response) {
+      console.error('Status:', err.response.status);
+      console.error('Response:', JSON.stringify(err.response.data));
+    }
     return [];
   }
 }

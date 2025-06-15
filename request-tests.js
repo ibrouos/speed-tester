@@ -12,12 +12,18 @@ async function main() {
     process.exit(1);
   }
 
+  console.log('Using API key length:', API_KEY.length);
+  console.log('URLs to test:', URLS_TO_TEST);
+  console.log('Locations:', LOCATIONS_TO_TEST);
+
   const apiParams = {
     urls: [...URLS_TO_TEST],
     locations: LOCATIONS_TO_TEST,
     devices: ['mobile', 'desktop'],
     batch_type: 'multiple-urls'
   };
+
+  console.log('Request parameters:', JSON.stringify(apiParams, null, 2));
 
   try {
     const response = await axios.post(
@@ -33,6 +39,10 @@ async function main() {
     console.log('Triggered tests:', response.data);
   } catch (err) {
     console.error('Failed to trigger tests:', err.message);
+    if (err.response) {
+      console.error('Status:', err.response.status);
+      console.error('Response:', JSON.stringify(err.response.data));
+    }
     process.exit(1);
   }
 }
