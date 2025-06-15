@@ -6,6 +6,10 @@ const URLS_TO_TEST = process.env.URLS_TO_TEST_SECRET
 const LOCATIONS_TO_TEST = ['uk','in','id','us','jp'];
 const API_KEY = process.env.SPEEDVITALS_API_KEY;
 
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function safeRequestWithRetry(params, retries = 3) {
   let delayMs = 1000;
 
