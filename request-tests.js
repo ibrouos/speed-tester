@@ -6,6 +6,31 @@ const URLS_TO_TEST = process.env.URLS_TO_TEST_SECRET
 const LOCATIONS_TO_TEST = ['uk','in','id','us','jp'];
 const API_KEY = process.env.SPEEDVITALS_API_KEY;
 
+async function safeRequestWithRetry(params, retries = 3) {
+  let delayMs = 1000;
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await axios.post(
+        'https://api.speedvitals.com/v1/lighthouse-tests',
+        params,
+        {
+          headers: {
+            'X-API-KEY': API_KEY,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      return response;
+    } catch (err) {
+      if (attempt === retries) throw err;
+      console.warn(`Retrying after ${delayMs}ms... (${attempt}/${retries})`);
+      await delay(delayMs);
+      delayMs *= 2; // Exponential backoff
+    }
+  }
+}
+
 async function main() {
   if (!API_KEY) {
     console.error('SPEEDVITALS_API_KEY environment variable not set.');
@@ -30,26 +55,17 @@ async function main() {
 
   for (const location of LOCATIONS_TO_TEST) {
     const params = { ...apiParams, location };
-
-    console.log({ params });
   
     try {
-      const response = await axios.post(
-        'https://api.speedvitals.com/v1/lighthouse-tests',
-        params,
-        {
-          headers: {
-            'X-API-KEY': API_KEY,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+      const response = await safeRequestWithRetry(params);
       console.log(`Success for ${location}:`, response.data);
     } catch (err) {
-      console.error(`Error for ${location}:`, err);
+      console.error(`Failed for ${location} after retries:`, err?.response?.data || err.message);
     }
+  
+    await delay(2000); // Throttle even after success
   }
-
+  
 }
 
 main();
