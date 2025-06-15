@@ -1,61 +1,58 @@
-# .github/workflows/performance-check.yml
 name: Daily Performance Check
 
 on:
-  # Run once a day at midnight UTC
   schedule:
     - cron: '0 15 * * *'
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  request-tests:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # To commit back to the repo
-      pages: write # To deploy to GitHub Pages
-      id-token: write # To authenticate with OIDC (optional but good practice)
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-            # We need to fetch all history to get the previous results.json
-            fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18' # Use a long-term support version of Node
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run test and build report
-        run: npm run test-and-build
+          node-version: '18'
+      - run: npm install
+      - name: Trigger SpeedVitals tests
+        run: npm run request-tests
         env:
-          # This is where the secret is passed to the Node.js script
           SPEEDVITALS_API_KEY: ${{ secrets.SPEEDVITALS_API_KEY }}
 
+  collect-and-build:
+    needs: request-tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - run: npm install
+      - name: Fetch results and build report
+        run: npm run fetch-and-build
+        env:
+          SPEEDVITALS_API_KEY: ${{ secrets.SPEEDVITALS_API_KEY }}
       - name: Commit data file and report
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/results.json public/index.html
-          # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "chore: Update performance data and report"
+            git commit -m "chore: update performance data and report"
             git push
           fi
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './public'
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
