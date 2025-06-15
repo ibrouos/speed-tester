@@ -17,7 +17,7 @@ async function main() {
   console.log('Locations:', LOCATIONS_TO_TEST);
 
   const apiParams = {
-    urls: [...URLS_TO_TEST][0],
+    url: 'https://sheffield.ac.uk',
     device: 'desktop'
   };
 
@@ -25,6 +25,8 @@ async function main() {
 
   for (const location of LOCATIONS_TO_TEST) {
     const params = { ...apiParams, location };
+
+    console.log({ params });
   
     try {
       const response = await axios.post(
