@@ -17,17 +17,16 @@ async function main() {
   console.log('Locations:', LOCATIONS_TO_TEST);
 
   const apiParams = {
-    urls: [...URLS_TO_TEST],
+    urls: [...URLS_TO_TEST][0],
     locations: LOCATIONS_TO_TEST,
-    devices: ['mobile', 'desktop'],
-    batch_type: 'multiple-urls'
+    device: 'desktop'
   };
 
   console.log('Request parameters:', JSON.stringify(apiParams, null, 2));
 
   try {
     const response = await axios.post(
-      'https://api.speedvitals.com/v1/lighthouse-batch-tests',
+      'https://api.speedvitals.com/v1/lighthouse-tests',
       apiParams,
       {
         headers: {
