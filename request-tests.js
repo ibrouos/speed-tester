@@ -22,7 +22,7 @@ async function main() {
     config: {
       connection: 'wifi',
       video: true,
-      adblock: falsae
+      adblock: false
     }
   };
 
