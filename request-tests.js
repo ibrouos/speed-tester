@@ -18,7 +18,12 @@ async function main() {
 
   const apiParams = {
     url: 'https://sheffield.ac.uk',
-    device: 'desktop'
+    device: 'desktop',
+    config: {
+      connection: 'wifi',
+      video: true,
+      adblock: falsae
+    }
   };
 
   console.log('Request parameters:', JSON.stringify(apiParams, null, 2));
