@@ -93,9 +93,12 @@ async function buildStaticPage(results) {
   <title>Website Performance Report</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Chart.js requires a date adapter for time scales -->
   <script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1"></script>
+  <script>
+    Chart.register(window['chartjs-adapter-luxon']);
+  </script>
+
   <style>
     body { font-family: 'Inter', sans-serif; }
     @import url('https://rsms.me/inter/inter.css');
